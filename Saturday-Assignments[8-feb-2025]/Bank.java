@@ -1,5 +1,6 @@
 package com.celcom.assignments;
 import java.util.ArrayList;
+import java.util.Scanner;
 class Bank1 {
 	String acc;
 	double amount;
@@ -55,9 +56,17 @@ class Management{
 		{
 		if(bank.getAcc().equals(acc))
 		{
-			double prev=bank.getAmount();
-			 bank.setAmount(prev-money);
+			double balance=bank.getAmount();
+			if(money<=balance)
+			{
+			 bank.setAmount(balance-money);
 			 return true;
+			}
+			else
+			{
+				System.out.println("Balance is low than the money of wihdrawal");
+				return false;
+			}
 		}
 		}
 		System.out.println("Account is not exisiting ");
@@ -83,16 +92,61 @@ public class Bank{
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		Bank1 b=new Bank1("kiru",100000);
-		Bank1 b1=new Bank1("enjen",100);
-		Management m=new Management();
-		m.addBank(b);
-		m.addBank(b1);
-		m.display("kiru");
-		m.deposit("kiru", 200);
-		m.display("kiru");
-		m.withdrawal("enjen", 50);
-		m.display("enjen");
+		Scanner sc=new Scanner(System.in);
+		 Management management = new Management();
+		 System.out.print("Enter the account holder name: ");
+         String name = sc.nextLine();
+	        while (true) {
+	            System.out.println("\nBank Management System");
+	            System.out.println("1. Create Account");
+	            System.out.println("2. Deposit");
+	            System.out.println("3. Withdraw");
+	            System.out.println("4. Display Balance");
+	            System.out.println("5. Exit");
+	            System.out.print("Enter your choice: ");
+
+	            int choice = sc.nextInt();
+	            sc.nextLine(); // Consume the newline
+
+	            switch (choice) {
+	                case 1:
+	                    
+	                    System.out.print("Enter the initial deposit amount: ");
+	                    double initialAmount = sc.nextDouble();
+	                    Bank1 newAccount = new Bank1(name, initialAmount);
+	                    management.addBank(newAccount);
+	                    break;
+
+	                case 2:
+	                    
+	                    System.out.print("Enter the amount to deposit: ");
+	                    double depositAmount = sc.nextDouble();
+	                    management.deposit(name, depositAmount);
+	                    break;
+
+	                case 3:
+	    
+	                    System.out.print("Enter the amount to withdraw: ");
+	                    double withdrawAmount = sc.nextDouble();
+	                    management.withdrawal(name, withdrawAmount);
+	                    break;
+
+	                case 4:
+	                    
+	                    management.display(name);
+	                    break;
+
+	                case 5:
+	                    System.out.println("Exiting the system...");
+	                    sc.close();
+	                    System.exit(0);
+	                    break;
+
+	                default:
+	                    System.out.println("Invalid choice. Please try again.");
+	            }
+	        }
+		
 	}
 
 }
