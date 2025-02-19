@@ -1,152 +1,139 @@
 package com.celcom.assignments;
-import java.util.ArrayList;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
+
 class Bank1 {
-	String acc;
-	double amount;
-	Bank1(String acc,double amount)
-	{
-		this.acc=acc;
-		this.amount=amount;
-	}
-	public String getAcc() 
-	{
-		return acc;
-	}
-	public double getAmount() {
-		return amount;
-	}
-	public void setAmount(double amount)
-	{
-		this.amount=amount;
-	}
-	public String toString() {
-		return "account: "+acc+ "amount: "+amount;
-	}
+    String acc;
+    double amount;
+
+    Bank1(String acc, double amount) {
+        this.acc = acc;
+        this.amount = amount;
+    }
+
+    public String getAcc() {
+        return acc;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public String toString() {
+        return "Account: " + acc + " | Balance: " + amount;
+    }
 }
-class Management{
-	ArrayList<Bank1> banks;
-   Management()
-	{
-		banks=new ArrayList<>();
-	}
-   void addBank(Bank1 bank) {
-	   banks.add(bank);
-	   {
-		   System.out.println(bank);
-	   }
-   }
-   public boolean deposit(String acc,double money)
-	{
-		for(Bank1 bank:banks)
-		{
-		if(bank.getAcc().equals(acc))
-		{
-			double prev=bank.getAmount();
-			 bank.setAmount(prev+money);
-			 return true;
-		}
-		}
-		System.out.println("Account is not exisiting ");
-		return false;
-	}
-   public boolean withdrawal(String acc,double money)
-	{
-		for(Bank1 bank:banks)
-		{
-		if(bank.getAcc().equals(acc))
-		{
-			double balance=bank.getAmount();
-			if(money<=balance)
-			{
-			 bank.setAmount(balance-money);
-			 return true;
-			}
-			else
-			{
-				System.out.println("Balance is low than the money of wihdrawal");
-				return false;
-			}
-		}
-		}
-		System.out.println("Account is not exisiting ");
-		return false;
-	}
-   public boolean display(String acc)
-   {
-	   for(Bank1 bank:banks)
-		{
-		if(bank.getAcc().equals(acc))
-		{
-			double prev=bank.getAmount();
-			System.out.println(prev);
-			return true;
-		}
-		}
-		System.out.println("Account is not exisiting ");
-		return false;
-   }
-	
+
+class Management {
+    Map<String, Bank1> banks;
+
+    Management() {
+        banks = new HashMap<>();
+    }
+
+    void addBank(Bank1 bank) {
+        banks.put(bank.getAcc(), bank);
+        System.out.println(bank);
+    }
+
+    public boolean deposit(String acc, double money) {
+        if (banks.containsKey(acc)) {
+            Bank1 bank = banks.get(acc);
+            bank.setAmount(bank.getAmount() + money);
+            return true;
+        }
+        System.out.println("Account does not exist.");
+        return false;
+    }
+
+    public boolean withdrawal(String acc, double money) {
+        if (banks.containsKey(acc)) {
+            Bank1 bank = banks.get(acc);
+            double balance = bank.getAmount();
+            if (money <= balance) {
+                bank.setAmount(balance - money);
+                return true;
+            } else {
+                System.out.println("Insufficient balance.");
+                return false;
+            }
+        }
+        System.out.println("Account does not exist.");
+        return false;
+    }
+
+    public boolean display(String acc) {
+        if (banks.containsKey(acc)) {
+            System.out.println("Balance: " + banks.get(acc).getAmount());
+            return true;
+        }
+        System.out.println("Account does not exist.");
+        return false;
+    }
 }
-public class Bank{
-	
+public class Bank_Project {
+
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		Scanner sc=new Scanner(System.in);
-		 Management management = new Management();
-		 System.out.print("Enter the account holder name: ");
-         String name = sc.nextLine();
-	        while (true) {
-	            System.out.println("\nBank Management System");
-	            System.out.println("1. Create Account");
-	            System.out.println("2. Deposit");
-	            System.out.println("3. Withdraw");
-	            System.out.println("4. Display Balance");
-	            System.out.println("5. Exit");
-	            System.out.print("Enter your choice: ");
 
-	            int choice = sc.nextInt();
-	            sc.nextLine(); // Consume the newline
+        Scanner sc = new Scanner(System.in);
+        Management management = new Management();
+        
+        System.out.print("Enter the account holder name: ");
+        String name = sc.nextLine();
 
-	            switch (choice) {
-	                case 1:
-	                    
-	                    System.out.print("Enter the initial deposit amount: ");
-	                    double initialAmount = sc.nextDouble();
-	                    Bank1 newAccount = new Bank1(name, initialAmount);
-	                    management.addBank(newAccount);
-	                    break;
+        while (true) {
+            System.out.println("\nBank Management System");
+            System.out.println("1. Create Account");
+            System.out.println("2. Deposit");
+            System.out.println("3. Withdraw");
+            System.out.println("4. Display Balance");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice: ");
 
-	                case 2:
-	                    
-	                    System.out.print("Enter the amount to deposit: ");
-	                    double depositAmount = sc.nextDouble();
-	                    management.deposit(name, depositAmount);
-	                    break;
+            int choice = sc.nextInt();
+            sc.nextLine(); // Consume the newline
 
-	                case 3:
-	    
-	                    System.out.print("Enter the amount to withdraw: ");
-	                    double withdrawAmount = sc.nextDouble();
-	                    management.withdrawal(name, withdrawAmount);
-	                    break;
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter the initial deposit amount: ");
+                    double initialAmount = sc.nextDouble();
+                    management.addBank(new Bank1(name, initialAmount));
+                    break;
 
-	                case 4:
-	                    
-	                    management.display(name);
-	                    break;
+                case 2:
+                    System.out.print("Enter the amount to deposit: ");
+                    double depositAmount = sc.nextDouble();
+                    management.deposit(name, depositAmount);
+                    break;
 
-	                case 5:
-	                    System.out.println("Exiting the system...");
-	                    sc.close();
-	                    System.exit(0);
-	                    break;
+                case 3:
+                    System.out.print("Enter the amount to withdraw: ");
+                    double withdrawAmount = sc.nextDouble();
+                    management.withdrawal(name, withdrawAmount);
+                    break;
 
-	                default:
-	                    System.out.println("Invalid choice. Please try again.");
-	            }
-	        }
-		
-	}
+                case 4:
+                    management.display(name);
+                    break;
 
+                case 5:
+                    System.out.println("Exiting the system...");
+                    sc.close();
+                    System.exit(0);
+                    break;
+
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
 }
+
+
+	
